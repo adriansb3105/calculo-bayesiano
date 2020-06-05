@@ -17,3 +17,10 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('estilos', 'EstilosController@getEstilos');
+Route::get('recintos', 'RecintoController@getRecintos');
+Route::get('sexos', 'SexoController@getSexos');
+Route::get('formas', 'FormaController@getFormas');
+Route::get('profesores', 'ProfesorController@getProfesores');
+Route::get('redes', 'RedController@getRedes');
