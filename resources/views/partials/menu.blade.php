@@ -5,7 +5,7 @@
       <div class="media-body">
         <h4 class="m-0">
           <a href="/" class="nav-link text-dark">
-            Cálculo de distancia Euclidiana
+            Algoritmo de Naive Bayes
           </a>
         </h4>
       </div>
