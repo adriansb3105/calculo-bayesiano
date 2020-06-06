@@ -3,10 +3,6 @@
 use Illuminate\Support\Str;
 
 $url = parse_url(getenv("CLEARDB_DATABASE_URL"));
-$host = $url["host"];
-$username = $url["user"];
-$password = $url["pass"];
-$database = substr($url["path"], 1);
 
 return [
 
@@ -21,7 +17,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'euclidesapp_mysql_connection'),
+    'default' => env('DB_CONNECTION', 'bayesapp_mysql_connection'),
     //'default' => env('DB_CONNECTION', 'mysql'),
 
     /*
@@ -51,12 +47,12 @@ return [
         ],
 
         
-        'euclidesapp_mysql_connection' => array(
+        'bayesapp_mysql_connection' => array(
             'driver' => 'mysql',
-            'host' => $host,
-            'database' => $database,
-            'username' => $username,
-            'password' => $password,
+            'host' => $url["host"],
+            'database' => substr($url["path"], 1),
+            'username' => $url["user"],
+            'password' => $url["pass"],
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
