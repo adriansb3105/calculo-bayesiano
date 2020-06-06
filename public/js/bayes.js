@@ -5,182 +5,179 @@ function bayes(respuestas, datos) {
     datos.forEach(function(datoActual) {
         datoActual = Object.values(datoActual);
 
-        let valor = datoActual[datoActual.length - 1];
+        var valor = datoActual[datoActual.length - 1];
         datoActual.pop();
 
-        Bayes.train(datoActual, valor);
+        Bayes.entrenar(datoActual, valor);
     });
 
-    var scores = Bayes.guess(respuestas);
+    var puntajes = Bayes.adivinar(respuestas);
 
-    return Bayes.extractWinner(scores);
+    return Bayes.ganador(puntajes);
 }
 
 var Bayes = (function(Bayes) {
     Array.prototype.unique = function() {
-        var u = {},
-            a = [];
+        var a = {},
+            b = [];
         for (var i = 0, l = this.length; i < l; ++i) {
-            if (u.hasOwnProperty(this[i])) {
+            if (a.hasOwnProperty(this[i])) {
                 continue;
             }
-            a.push(this[i]);
-            u[this[i]] = 1;
+            b.push(this[i]);
+            a[this[i]] = 1;
         }
-        return a;
+        return b;
     }
-    var stemKey = function(stem, label) {
-        return '_Bayes::stem:' + stem + '::label:' + label;
+    var claveRaiz = function(raiz, etiqueta) {
+        return '_Bayes::raiz:' + raiz + '::etiqueta:' + etiqueta;
     };
-    var docCountKey = function(label) {
-        return '_Bayes::docCount:' + label;
+    var claveContadorDocumentos = function(etiqueta) {
+        return '_Bayes::contadorDocumento:' + etiqueta;
     };
-    var stemCountKey = function(stem) {
-        return '_Bayes::stemCount:' + stem;
-    };
-
-    var tokenize = function(text) {
-        //text = text.toLowerCase().replace(/\W/g, ' ').replace(/\s+/g, ' ').trim().split(' ').unique();
-        return text;
+    var claveContadorRaiz = function(raiz) {
+        return '_Bayes::stemCount:' + raiz;
     };
 
-    var getLabels = function() {
-        var labels = localStorage.getItem('_Bayes::registeredLabels');
-        if (!labels) labels = '';
-        return labels.split(',').filter(function(a) {
+    var token = function(texto) {
+        return texto;
+    };
+
+    var obtenerEtiquetas = function() {
+        var etiquetas = localStorage.getItem('_Bayes::etiquetasRegistradas');
+        if (!etiquetas) etiquetas = '';
+        return etiquetas.split(',').filter(function(a) {
             return a.length;
         });
     };
 
-    var registerLabel = function(label) {
-        var labels = getLabels();
-        if (labels.indexOf(label) === -1) {
-            labels.push(label);
-            localStorage.setItem('_Bayes::registeredLabels', labels.join(','));
+    var registrarEtiquetas = function(etiqueta) {
+        var etiquetas = obtenerEtiquetas();
+        if (etiquetas.indexOf(etiqueta) === -1) {
+            etiquetas.push(etiqueta);
+            localStorage.setItem('_Bayes::etiquetasRegistradas', etiquetas.join(','));
         }
         return true;
     };
 
-    var stemLabelCount = function(stem, label) {
-        var count = parseInt(localStorage.getItem(stemKey(stem, label)));
-        if (!count) count = 0;
-        return count;
+    var contadorEtiquetasRaiz = function(raiz, etiqueta) {
+        var contador = parseInt(localStorage.getItem(claveRaiz(raiz, etiqueta)));
+        if (!contador) contador = 0;
+        return contador;
     };
-    var stemInverseLabelCount = function(stem, label) {
-        var labels = getLabels();
+    var contadorEtiquetasRaizInverso = function(raiz, etiqueta) {
+        var etiquetas = obtenerEtiquetas();
         var total = 0;
-        for (var i = 0, length = labels.length; i < length; i++) {
-            if (labels[i] === label)
+        for (var i = 0, length = etiquetas.length; i < length; i++) {
+            if (etiquetas[i] === etiqueta)
                 continue;
-            total += parseInt(stemLabelCount(stem, labels[i]));
+            total += parseInt(contadorEtiquetasRaiz(raiz, etiquetas[i]));
         }
         return total;
     };
 
-    var stemTotalCount = function(stem) {
-        var count = parseInt(localStorage.getItem(stemCountKey(stem)));
-        if (!count) count = 0;
-        return count;
+    var contadorRaizTotal = function(raiz) {
+        var contador = parseInt(localStorage.getItem(claveContadorRaiz(raiz)));
+        if (!contador) contador = 0;
+        return contador;
     };
-    var docCount = function(label) {
-        var count = parseInt(localStorage.getItem(docCountKey(label)));
-        if (!count) count = 0;
-        return count;
+    var contadorDocumento = function(etiqueta) {
+        var contador = parseInt(localStorage.getItem(claveContadorDocumentos(etiqueta)));
+        if (!contador) contador = 0;
+        return contador;
     };
-    var docInverseCount = function(label) {
-        var labels = getLabels();
+    var contadorDocumentosInverso = function(etiqueta) {
+        var etiquetas = obtenerEtiquetas();
         var total = 0;
-        for (var i = 0, length = labels.length; i < length; i++) {
-            if (labels[i] === label)
+        for (var i = 0, length = etiquetas.length; i < length; i++) {
+            if (etiquetas[i] === etiqueta)
                 continue;
-            total += parseInt(docCount(labels[i]));
+            total += parseInt(contadorDocumento(etiquetas[i]));
         }
         return total;
     };
-    var increment = function(key) {
-        var count = parseInt(localStorage.getItem(key));
-        if (!count) count = 0;
-        localStorage.setItem(key, parseInt(count) + 1);
-        return count + 1;
+    var incremento = function(clave) {
+        var contador = parseInt(localStorage.getItem(clave));
+        if (!contador) contador = 0;
+        localStorage.setItem(clave, parseInt(contador) + 1);
+        return contador + 1;
     };
 
-    var incrementStem = function(stem, label) {
-        increment(stemCountKey(stem));
-        increment(stemKey(stem, label));
+    var incrementoRaiz = function(raiz, etiqueta) {
+        incremento(claveContadorRaiz(raiz));
+        incremento(claveRaiz(raiz, etiqueta));
     };
 
-    var incrementDocCount = function(label) {
-        return increment(docCountKey(label));
+    var incrementoContadorDocumentos = function(etiqueta) {
+        return incremento(claveContadorDocumentos(etiqueta));
     };
 
-    Bayes.train = function(text, label) {
-        registerLabel(label);
-        var words = tokenize(text);
-        var length = words.length;
+    Bayes.entrenar = function(texto, etiqueta) {
+        registrarEtiquetas(etiqueta);
+        var palabras = token(texto);
+        var length = palabras.length;
         for (var i = 0; i < length; i++)
-            incrementStem(words[i], label);
-        incrementDocCount(label);
+            incrementoRaiz(palabras[i], etiqueta);
+        incrementoContadorDocumentos(etiqueta);
     };
 
-    Bayes.guess = function(text) {
-        var words = tokenize(text);
-        var length = words.length;
-        var labels = getLabels();
-        var totalDocCount = 0;
-        var docCounts = {};
-        var docInverseCounts = {};
-        var scores = {};
-        var labelProbability = {};
+    Bayes.adivinar = function(texto) {
+        var palabras = token(texto);
+        var length = palabras.length;
+        var etiquetas = obtenerEtiquetas();
+        var contadorDocumentosTotales = 0;
+        var contadorDocumentos = {};
+        var contadorDocumentosInversos = {};
+        var puntajes = {};
+        var probabilidadEtiqueta = {};
 
-        for (var j = 0; j < labels.length; j++) {
-            var label = labels[j];
-            docCounts[label] = docCount(label);
-            docInverseCounts[label] = docInverseCount(label);
-            totalDocCount += parseInt(docCounts[label]);
+        for (var j = 0; j < etiquetas.length; j++) {
+            var etiqueta = etiquetas[j];
+            contadorDocumentos[etiqueta] = contadorDocumento(etiqueta);
+            contadorDocumentosInversos[etiqueta] = contadorDocumentosInverso(etiqueta);
+            contadorDocumentosTotales += parseInt(contadorDocumentos[etiqueta]);
         }
 
-        for (var j = 0; j < labels.length; j++) {
-            var label = labels[j];
-            var logSum = 0;
-            labelProbability[label] = docCounts[label] / totalDocCount;
+        for (var j = 0; j < etiquetas.length; j++) {
+            var etiqueta = etiquetas[j];
+            var logSuma = 0;
+            probabilidadEtiqueta[etiqueta] = contadorDocumentos[etiqueta] / contadorDocumentosTotales;
 
             for (var i = 0; i < length; i++) {
-                var word = words[i];
-                var _stemTotalCount = stemTotalCount(word);
-                if (_stemTotalCount === 0) {
+                var palabra = palabras[i];
+                var _contadorRaizTotal = contadorRaizTotal(palabra);
+                if (_contadorRaizTotal === 0) {
                     continue;
                 } else {
-                    var wordProbability = stemLabelCount(word, label) / docCounts[label];
-                    var wordInverseProbability = stemInverseLabelCount(word, label) / docInverseCounts[label];
-                    var wordicity = wordProbability / (wordProbability + wordInverseProbability);
+                    var probabilidadPalabra = contadorEtiquetasRaiz(palabra, etiqueta) / contadorDocumentos[etiqueta];
+                    var probabilidadPalabraInversa = contadorEtiquetasRaizInverso(palabra, etiqueta) / contadorDocumentosInversos[etiqueta];
+                    var palabraClasificada = probabilidadPalabra / (probabilidadPalabra + probabilidadPalabraInversa);
 
-                    wordicity = ((1 * 0.5) + (_stemTotalCount * wordicity)) / (1 + _stemTotalCount);
-                    if (wordicity === 0)
-                        wordicity = 0.01;
-                    else if (wordicity === 1)
-                        wordicity = 0.99;
+                    palabraClasificada = ((1 * 0.5) + (_contadorRaizTotal * palabraClasificada)) / (1 + _contadorRaizTotal);
+                    if (palabraClasificada === 0)
+                        palabraClasificada = 0.01;
+                    else if (palabraClasificada === 1)
+                        palabraClasificada = 0.99;
                 }
 
-                logSum += (Math.log(1 - wordicity) - Math.log(wordicity));
-                //log(label + "icity of " + word + ": " + wordicity);
+                logSuma += (Math.log(1 - palabraClasificada) - Math.log(palabraClasificada));
             }
-            scores[label] = 1 / (1 + Math.exp(logSum));
+            puntajes[etiqueta] = 1 / (1 + Math.exp(logSuma));
         }
-        return scores;
+        return puntajes;
     };
 
-    Bayes.extractWinner = function(scores) {
-        var bestScore = 0;
-        var bestLabel = null;
-        for (var label in scores) {
-            if (scores[label] > bestScore) {
-                bestScore = scores[label];
-                bestLabel = label;
+    Bayes.ganador = function(puntajes) {
+        var mejorPuntaje = 0;
+        var mejorEtiqueta = null;
+        for (var etiqueta in puntajes) {
+            if (puntajes[etiqueta] > mejorPuntaje) {
+                mejorPuntaje = puntajes[etiqueta];
+                mejorEtiqueta = etiqueta;
             }
         }
-        console.log(scores);
 
-        return bestLabel;
+        return mejorEtiqueta;
     };
 
     return Bayes;
