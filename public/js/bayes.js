@@ -1,5 +1,11 @@
+/**
+ * Limpia la memoria del navegador antes de comenzar
+ */
 localStorage.clear();
 
+/**
+ * Recibe las entradas del usuario y los datos de la base de datos para el entrenamiento
+ */
 function bayes(respuestas, datos) {
 
     datos.forEach(function(datoActual) {
@@ -16,6 +22,9 @@ function bayes(respuestas, datos) {
     return Bayes.ganador(puntajes);
 }
 
+/**
+ * Este objeto contiene las funciones necesarias para clasificar etiquetas, entrenar el algoritmo y adivinar
+ */
 var Bayes = (function(Bayes) {
     Array.prototype.unique = function() {
         var a = {},
@@ -167,6 +176,9 @@ var Bayes = (function(Bayes) {
         return puntajes;
     };
 
+    /**
+     * Llama a la función ganador la cual selecciona la mejor etiqueta 
+     */
     Bayes.ganador = function(puntajes) {
         var mejorPuntaje = 0;
         var mejorEtiqueta = null;
