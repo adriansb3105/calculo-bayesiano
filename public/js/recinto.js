@@ -32,7 +32,7 @@ function calcularRecinto() {
             /**
              * Envía por parámetro los valores estilo, promedio, sexo y los recintos de la base de datos a la función que calculará el estilo
              */
-            let recinto = euclides(respuestas, recintos);
+            let recinto = bayes(respuestas, recintos);
 
             if (recinto == 'Paraiso') {
                 recinto = 'Paraíso';

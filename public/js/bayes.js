@@ -6,17 +6,11 @@ function bayes(respuestas, datos) {
         datoActual = Object.values(datoActual);
 
         let valor = datoActual[datoActual.length - 1];
-        datoActual = [datoActual[0], datoActual[1], datoActual[2], datoActual[3]];
-
-
-        console.log(datoActual);
-        console.log(valor);
-
+        datoActual.pop();
 
         Bayes.train(datoActual, valor);
     });
 
-    //console.log(respuestas);
     var scores = Bayes.guess(respuestas);
 
     return Bayes.extractWinner(scores);

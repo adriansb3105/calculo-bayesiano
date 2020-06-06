@@ -32,7 +32,7 @@ function calcularSexo() {
             /**
              * Envía por parámetro los valores estilo, promedio, recinto y los sexos de la base de datos a la función que calculará el estilo
              */
-            let sexo = euclides(respuestas, sexos);
+            let sexo = bayes(respuestas, sexos);
 
             /**
              * Indica en la pantalla el estilo resultante

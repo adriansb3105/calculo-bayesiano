@@ -36,7 +36,7 @@ function calcularProfesor() {
         /**
          * Envía por parámetro los valores edad, sexo, evaluacion, veces, fondo, habilidad, experiencia, web de la base de datos a la función que calculará el estilo
          */
-        let profesor = euclides(respuestas, profesores);
+        let profesor = bayes(respuestas, profesores);
 
         /**
          * Indica en la pantalla el estilo resultante

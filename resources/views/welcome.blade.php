@@ -13,7 +13,7 @@
   </h3>
 
   <div class="mt-2 d-flex justify-content-center">
-    <img id="euclidiana" src="{{ asset('/img/Bayes.png') }}" alt="euclidiana" class="img-responsive img-rounded">
+    <img id="bayes" src="{{ asset('/img/Bayes.png') }}" alt="bayes" class="img-responsive img-rounded">
   </div>
 
 </div>

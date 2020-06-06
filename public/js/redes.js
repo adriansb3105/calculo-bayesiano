@@ -32,7 +32,7 @@ function calcularRed() {
         /**
          * Envía por parámetro los valores fiabilidad, enlaces, capacidad, costo de la base de datos a la función que calculará el estilo
          */
-        let red = euclides(respuestas, redes);
+        let red = bayes(respuestas, redes);
 
         /**
          * Indica en la pantalla el estilo resultante

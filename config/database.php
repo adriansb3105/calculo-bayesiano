@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Str;
 
-$url = parse_url(getenv("CLEARDB_DATABASE_URL"));
+//$url = parse_url(getenv("CLEARDB_DATABASE_URL"));
 
 return [
 
@@ -17,8 +17,8 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'bayesapp_mysql_connection'),
-    //'default' => env('DB_CONNECTION', 'mysql'),
+    //'default' => env('DB_CONNECTION', 'bayesapp_mysql_connection'),
+    'default' => env('DB_CONNECTION', 'mysql'),
 
     /*
     |--------------------------------------------------------------------------
@@ -46,7 +46,7 @@ return [
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
 
-        
+        /*
         'bayesapp_mysql_connection' => array(
             'driver' => 'mysql',
             'host' => $url["host"],
@@ -57,7 +57,7 @@ return [
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
         ),
-
+*/
 
         'mysql' => [
             'driver' => 'mysql',

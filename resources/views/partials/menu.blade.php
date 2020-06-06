@@ -53,13 +53,6 @@
       </a>
     </li>
 
-    <li class="nav-item">
-      <a href="/eficiencia" class="nav-link text-dark font-italic bg-light">
-        <i class="fa fa-th-large mr-3 text-primary fa-fw"></i>
-        Medir la eficiencia
-      </a>
-    </li>
-
   </ul>
 </div>
 <!-- End vertical navbar -->

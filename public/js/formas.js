@@ -32,8 +32,7 @@ function calcularForma() {
             /**
              * Envía por parámetro los valores recinto, promedio, sexo y los sexos de la base de datos a la función que calculará el estilo
              */
-            let forma = euclides(respuestas, formas);
-
+            let forma = bayes(respuestas, formas);
             /**
              * Indica en la pantalla el estilo resultante
              */
